@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#153e31">
+  <meta name="description" content="Зелёный пульс — прогулочный маршрут в Ельске: интерактивная схема, здоровье, скандинавская ходьба, расположение, обратная связь и QR-коды.">
+  <title>Зелёный пульс — интерактивный маршрут</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="experience.css?v=20261015-sequence">
+  <link rel="stylesheet" href="journey.css?v=20261015-sequence">
+  <link rel="stylesheet" href="service.css?v=20261015-sequence">
+  <link rel="stylesheet" href="hero.css?v=20261015-sequence">
+  <link rel="stylesheet" href="preparation.css?v=20261015-sequence">
+  <link rel="stylesheet" href="hero-scene.css?v=20261015-sequence">
+  <link rel="preload" as="image" href="assets/hero-cinema-night.webp">
+</head>
+<body>
+  <div class="pulse-rail" aria-hidden="true"></div>
+  <a class="skip-link" href="#main">Перейти к содержимому</a>
+  <header class="header">
+    <button class="brand" data-go="home" aria-label="Зелёный пульс — на главную">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 33C4 23 3 15 8 9c4-5 10-3 12 1 3-4 9-6 13-1 5 6 3 14-13 24Z"/><path d="M5 20h9l3-6 4 13 4-7h10"/></svg>
+      <span>Зелёный пульс<small>Терренкур в Ельске</small></span>
+    </button>
+    <nav class="header-nav" aria-label="Основная навигация">
+      <button class="nav-link" data-go="map">Маршрут</button>
+      <button class="nav-link" data-go="health">Здоровье</button>
+      <button class="nav-link" data-go="where">Как добраться</button>
+      <button class="global-theme" id="global-light" data-global-light aria-pressed="false" aria-label="Включить тёмную тему"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 15A9 9 0 0 1 9 4a9 9 0 1 0 11 11Z"/></svg><span id="global-light-label">Тёмная тема</span></button>
+      <button class="accessibility-open" id="accessibility-open" aria-label="Настройки доступности" aria-haspopup="dialog" aria-controls="accessibility-dialog"><span aria-hidden="true">Аа</span><span class="accessibility-label">Доступность</span></button>
+      <button class="menu-button" id="menu-open" aria-controls="nav-dialog" aria-haspopup="dialog"><span>Меню</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h16M4 16h16"/></svg></button>
+    </nav>
+  </header>
+  <main id="main" tabindex="-1"></main>
+  <footer class="footer"><div class="footer-identity"><strong>Зелёный пульс</strong><span>Терренкур в Ельске · Гомельская область</span></div><div class="footer-links"><button data-go="where">Как добраться</button><button data-go="nordic">Ходьба с палками</button><button data-go="feedback">Обратная связь</button><button data-go="qr">QR-код</button><button data-go="project">О проекте</button></div><p>Визуализация концепции · 13.10.2026<br>Расположение элементов уточняется на местности</p></footer>
+  <dialog id="nav-dialog" aria-label="Навигация по сайту"><button class="dialog-close icon-button" id="menu-close" aria-label="Закрыть меню">×</button><p class="eyebrow">Зелёный пульс</p><nav class="full-menu"><button data-go="presentation">Смотреть как презентацию<span>Шесть экранов с автоматическим показом</span></button><button data-go="project">О проекте<span>Цели, схема и карточка для презентации</span></button><button data-go="walk">Начать прогулку<span>Пройдите круг шаг за шагом</span></button><button data-go="map">Интерактивный маршрут<span>Схема и виды территории</span></button><button data-go="health">Ходьба и здоровье<span>Польза регулярного движения</span></button><button data-go="nordic">Скандинавская ходьба<span>Что такое ходьба с палками</span></button><button data-go="expert">Слово специалиста<span>Рекомендация и вопросы для первого занятия</span></button><button data-go="where">Как добраться<span>Карта расположения в Ельске</span></button><button data-go="feedback">Обратная связь<span>Предложения и вопросы о проекте</span></button><button data-go="qr">QR для прогулки<span>Открыть маршрут на телефоне</span></button></nav></dialog>
+  <dialog id="about-dialog" aria-labelledby="about-title">
+    <button class="dialog-close icon-button" id="about-close" aria-label="Закрыть">×</button>
+    <p class="eyebrow">Концепция проекта</p><h2 id="about-title">Движение рядом с домом</h2>
+    <p>«Зелёный пульс» — проект прогулочно-оздоровительного маршрута на городской территории вблизи Ельской центральной районной больницы.</p>
+    <p>Запланирован один бесплатный замкнутый круг для обычной и скандинавской ходьбы. Спортивная площадка и места отдыха дополняют прогулку.</p>
+    <p>Главная цель — вовлечь жителей в регулярную ходьбу и профилактику заболеваний. Маршрут рядом с ЦРБ помогает сделать движение частью повседневной жизни.</p>
+    <div class="about-stats"><div><strong>≈ 1 050 м</strong><span>длина круга</span></div><div><strong>4</strong><span>тематические зоны</span></div><div><strong>10</strong><span>мест отдыха</span></div><div><strong>48</strong><span>светильников на круге</span></div></div>
+    <p class="source-note">Сайт создан по предоставленным брошюре, буклету и презентации. Виды показывают предполагаемый облик территории. Длина, расположение объектов и дистанционных отметок уточняются на местности.</p>
+    <button class="primary-button about-health" data-go="health">Ходьба и здоровье →</button>
+  </dialog>
+  <div id="accessibility-host"></div>
+  <div id="announcement" class="sr-only" role="status" aria-live="polite"></div>
+  <script type="module" src="app.mjs?v=20261015-sequence"></script>
+</body>
+</html>
