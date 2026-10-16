@@ -1,4 +1,5 @@
-import {places,imageFor,sides} from './tour.mjs?v=20261016-route-reveal';
+import {forestLivingMarkup,visualEffects} from './living-scenes.mjs?v=20261016-restored';
+import {places,imageFor,sides} from './tour.mjs?v=20261016-restored';
 
 export const walkSteps = [
   {id:'start',place:'start',title:'Начнём с сердца',caption:'Старт / финиш',meters:0,progress:0,text:'Красное сердце с линией пульса — начало круга и главный ориентир. Впереди примерно 1 050 метров в вашем ритме.'},
@@ -14,7 +15,7 @@ export const walkSteps = [
 export function mapPoint(place) {return ({start:[565,887],right:[637,260],top:[360,42],entrance:[68,99],forest:[165,117],left:[62,537],bottom:[450,865]})[place]||null;}
 
 export function photoPair(place,{hero=false,lazy=false,compareId=''}={}) {
-  return `<div ${compareId?`id="${compareId}"`:''} class="photo-pair ${hero?'hero-photo-pair':''} ${compareId?'is-comparing':''}" ${compareId?'data-comparing="true"':''} role="${compareId?'group':'img'}" aria-label="${places[place].title} — дневная и вечерняя визуализации проекта">${['day','night'].map(mode=>`<img class="photo-${mode}" src="${imageFor(place,mode)}" alt="" aria-hidden="true" ${lazy?'loading="lazy"':'fetchpriority="high"'} decoding="async">`).join('')}${compareId?`<input class="photo-compare-slider" type="range" min="0" max="100" value="50" data-compare-range="${compareId}" aria-label="Граница между днём и вечером — ${places[place].short}" aria-valuetext="День 50%, вечер 50%"><span class="compare-label compare-day" aria-hidden="true">День</span><span class="compare-label compare-night" aria-hidden="true">Вечер</span><span class="compare-divider" aria-hidden="true"><i>↔</i></span>`:''}</div>`;
+  return `<div ${compareId?`id="${compareId}"`:''} class="photo-pair ${hero?'hero-photo-pair':''} ${compareId?'is-comparing':''}" ${compareId?'data-comparing="true"':''} ${place==='forest'&&visualEffects.livingPhotos?'data-live-forest':''} role="${compareId?'group':'img'}" aria-label="${places[place].title} — дневная и вечерняя визуализации проекта">${['day','night'].map(mode=>`<img class="photo-${mode}" src="${imageFor(place,mode)}" alt="" aria-hidden="true" ${lazy?'loading="lazy"':'fetchpriority="high"'} decoding="async">`).join('')}${place==='forest'?forestLivingMarkup():''}${compareId?`<input class="photo-compare-slider" type="range" min="0" max="100" value="50" data-compare-range="${compareId}" aria-label="Граница между днём и вечером — ${places[place].short}" aria-valuetext="День 50%, вечер 50%"><span class="compare-label compare-day" aria-hidden="true">День</span><span class="compare-label compare-night" aria-hidden="true">Вечер</span><span class="compare-divider" aria-hidden="true"><i>↔</i></span>`:''}</div>`;
 }
 
 export function heroPulse() {

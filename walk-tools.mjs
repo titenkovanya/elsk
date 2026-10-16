@@ -1,4 +1,4 @@
-import {motionReduced} from './accessibility.mjs?v=20261016-route-reveal';
+import {motionReduced} from './accessibility.mjs?v=20261016-restored';
 import qrcode from './vendor/qrcode.mjs';
 
 export const ROUTE_LENGTH=1050;

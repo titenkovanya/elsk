@@ -1,4 +1,4 @@
-import {motionReduced} from './accessibility.mjs?v=20261016-route-reveal';
+import {motionReduced} from './accessibility.mjs?v=20261016-restored';
 
 const pulse=[[40,400],[180,400],[265,400],[320,320],[365,515],[410,235],[470,575],[520,400],[565,400],[625,400],[665,350],[705,460],[745,400],[805,400],[865,400],[920,400],[960,400]];
 // The same clockwise outline as the main scheme, fitted to this scene's viewBox.

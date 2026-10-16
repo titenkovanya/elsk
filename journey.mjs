@@ -1,11 +1,11 @@
-import {storyChapterMarkup} from './route-stories.mjs?v=20261016-route-reveal';
-import {walkFinaleMarkup} from './walk-finale.mjs?v=20261016-route-reveal';
-import {pulseBridge} from './route-cards.mjs?v=20261016-route-reveal';
-import {preparationMarkup} from './project-page.mjs?v=20261016-route-reveal';
-import {motionReduced} from './accessibility.mjs?v=20261016-route-reveal';
-import {places,sides} from './tour.mjs?v=20261016-route-reveal';
-import {walkSteps,mapPoint,photoPair,routeModes,chooseWalkIndex} from './experience.mjs?v=20261016-route-reveal';
-import {ROUTE_LENGTH,walkingProgram,walkingTimeLabel,pacePlanMarkup,paceOptions,normalizePace,emotions,checkpointFor,distanceAt,preferencesMarkup,progressMarkup,checkpointsMarkup,comparisonTools} from './walk-tools.mjs?v=20261016-route-reveal';
+import {storyChapterMarkup} from './route-stories.mjs?v=20261016-restored';
+import {walkFinaleMarkup} from './walk-finale.mjs?v=20261016-restored';
+import {pulseBridge} from './route-cards.mjs?v=20261016-restored';
+import {preparationMarkup} from './project-page.mjs?v=20261016-restored';
+import {motionReduced} from './accessibility.mjs?v=20261016-restored';
+import {places,sides} from './tour.mjs?v=20261016-restored';
+import {walkSteps,mapPoint,photoPair,routeModes,chooseWalkIndex} from './experience.mjs?v=20261016-restored';
+import {ROUTE_LENGTH,walkingProgram,walkingTimeLabel,pacePlanMarkup,paceOptions,normalizePace,emotions,checkpointFor,distanceAt,preferencesMarkup,progressMarkup,checkpointsMarkup,comparisonTools} from './walk-tools.mjs?v=20261016-restored';
 
 function breather(){return `<section class="walk-breather" id="walk-breather" data-walk-meter="525" aria-labelledby="breather-title">${photoPair('forest',{lazy:true})}<div class="breather-shade"></div><div class="breather-light" aria-hidden="true"></div><div class="breather-content"><p class="eyebrow">Половина круга · ≈ 525 м</p><h2 id="breather-title">Остановитесь на миг.<br><em>Вдохните спокойно.</em></h2><p>Можно сделать паузу и просто посмотреть на лес.</p><button class="primary-button" id="breather-continue" data-walk-target="entrance" hidden>Продолжить прогулку ↓</button><button class="breather-skip" data-walk-target="entrance">Пропустить передышку →</button></div></section>`;}
 export function walkPage({mapMarkup,go,svg,lightSwitch,mode,pace='calm'}){

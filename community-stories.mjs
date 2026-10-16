@@ -1,7 +1,7 @@
-import {places,imageFor} from './tour.mjs?v=20261016-route-reveal';
-import {photoPair} from './experience.mjs?v=20261016-route-reveal';
-import {motionReduced} from './accessibility.mjs?v=20261016-route-reveal';
-import {comparisonTools,syncComparisonMotion} from './walk-tools.mjs?v=20261016-route-reveal';
+import {places,imageFor} from './tour.mjs?v=20261016-restored';
+import {photoPair} from './experience.mjs?v=20261016-restored';
+import {motionReduced} from './accessibility.mjs?v=20261016-restored';
+import {comparisonTools,syncComparisonMotion} from './walk-tools.mjs?v=20261016-restored';
 const esc=value=>String(value||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const routeIds=['start','right','top','forest','left','bottom'];
 const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;

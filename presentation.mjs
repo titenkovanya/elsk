@@ -1,7 +1,7 @@
-import {comparisonTools,syncComparisonMotion} from './walk-tools.mjs?v=20261016-route-reveal';
-import {photoPair} from './experience.mjs?v=20261016-route-reveal';
-import {motionReduced} from './accessibility.mjs?v=20261016-route-reveal';
-import {buildQrSvg} from './pages.mjs?v=20261016-route-reveal';
+import {comparisonTools,syncComparisonMotion} from './walk-tools.mjs?v=20261016-restored';
+import {photoPair} from './experience.mjs?v=20261016-restored';
+import {motionReduced} from './accessibility.mjs?v=20261016-restored';
+import {buildQrSvg} from './pages.mjs?v=20261016-restored';
 export const presentationSlides=[
  {label:'Идея',title:'Движение рядом.<br><em>Каждый день.</em>',copy:'«Зелёный пульс» — концепция бесплатного прогулочного круга возле Ельской ЦРБ. Место для обычной и скандинавской ходьбы, пауз и общения.',type:'idea'},
  {label:'Карта',title:'Один круг.<br><em>Свой ритм.</em>',copy:'Примерно 1 050 метров: рябиновая аллея, лесная сторона, спортивная площадка и зона спокойного отдыха. Ответвление ведёт к беседке и качелям.',type:'map'},

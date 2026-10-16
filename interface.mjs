@@ -1,8 +1,10 @@
-import {motionReduced} from './accessibility.mjs?v=20261016-route-reveal';
-import {mountRouteReveal} from './route-reveal.mjs?v=20261016-route-reveal';
+import {mountMenuPreview} from './brand-motion.mjs?v=20261016-restored';
+import {motionReduced} from './accessibility.mjs?v=20261016-restored';
+import {mountRouteReveal} from './route-reveal.mjs?v=20261016-restored';
 
 // Visual feedback stays separate from route, camera and comparison state.
 export function mountInterface({menu,trigger,main,root=globalThis.document}={}){
+  const menuPreview=mountMenuPreview({root,menu});
   const cleanups=[],ripples=new Set(),photoAnimations=new Set();let menuAnimation=null,pageAnimation=null,photoObserver=null,revealedPhotos=new WeakSet(),epoch=0,destroyed=false;
   const veil=root.getElementById?.('scene-transition');
   const routeReveal=mountRouteReveal({root});let routeSeen=false;
@@ -11,10 +13,10 @@ export function mountInterface({menu,trigger,main,root=globalThis.document}={}){
   const expanded=value=>trigger?.setAttribute('aria-expanded',String(value));
   function closeNow(){stopMenu();if(menu){menu.dataset.menuState='closed';if(menu.open)menu.close();}expanded(false);}
   function openMenu(){if(!menu||destroyed)return;stopMenu();if(!menu.open)menu.showModal();menu.dataset.menuState='open';expanded(true);
-    if(!motionReduced()&&menu.animate){menuAnimation=menu.animate([{opacity:0,transform:'translateY(38px) scale(.96)'},{opacity:1,transform:'translateY(0) scale(1)'}],{duration:780,easing:'cubic-bezier(.16,1,.3,1)'});menuAnimation.finished.catch(()=>{});}
+    if(!motionReduced()&&menu.animate){menuAnimation=menu.animate([{opacity:1,clipPath:'inset(0 0 100% 0)'},{opacity:1,clipPath:'inset(0)'}],{duration:780,easing:'cubic-bezier(.16,1,.3,1)'});menuAnimation.finished.catch(()=>{});}
   }
   function closeMenu({immediate=false}={}){if(!menu?.open)return;if(immediate||motionReduced()||!menu.animate){closeNow();return;}if(menu.dataset.menuState==='closing')return;
-    stopMenu();const ticket=epoch;menu.dataset.menuState='closing';menuAnimation=menu.animate([{opacity:1,transform:'translateY(0) scale(1)'},{opacity:0,transform:'translateY(24px) scale(.985)'}],{duration:360,easing:'cubic-bezier(.4,0,1,1)',fill:'forwards'});
+    stopMenu();const ticket=epoch;menu.dataset.menuState='closing';menuAnimation=menu.animate([{opacity:1,clipPath:'inset(0)'},{opacity:1,clipPath:'inset(0 0 100% 0)'}],{duration:360,easing:'cubic-bezier(.4,0,1,1)',fill:'forwards'});
     menuAnimation.finished.then(()=>{if(!destroyed&&ticket===epoch)closeNow();}).catch(()=>{});
   }
   function clearRipples(){for(const item of ripples){item.animation.cancel();item.node.remove();}ripples.clear();}
@@ -47,5 +49,5 @@ export function mountInterface({menu,trigger,main,root=globalThis.document}={}){
   on(root,'click',event=>{if(event.target?.closest?.('[data-play-route-scene]')){stopPage();routeSeen=routeReveal.play()||routeSeen;}});
   on(root,'pointerdown',press,{passive:true});on(root,'green-pulse-accessibility',motionChange);on(root,'visibilitychange',()=>{if(root.visibilityState==='hidden'){stopPage();stopPhotos();clearRipples();if(menu?.dataset.menuState==='closing')closeNow();}else revealPhotos();});
   expanded(false);
-  return {openMenu,closeMenu,refresh,destroy(){destroyed=true;closeNow();stopPage();routeReveal.destroy();stopPhotos();clearRipples();cleanups.forEach(fn=>fn());}};
+  return {openMenu,closeMenu,refresh,destroy(){destroyed=true;menuPreview.destroy();closeNow();stopPage();routeReveal.destroy();stopPhotos();clearRipples();cleanups.forEach(fn=>fn());}};
 }

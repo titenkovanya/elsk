@@ -1,9 +1,9 @@
-import {designerPosterSvg} from './route-cards.mjs?v=20261016-route-reveal';
-import {nearbyMarkup} from './project-page.mjs?v=20261016-route-reveal';
-import {weatherMarkup} from './weather.mjs?v=20261016-route-reveal';
+import {designerPosterSvg} from './route-cards.mjs?v=20261016-restored';
+import {nearbyMarkup} from './project-page.mjs?v=20261016-restored';
+import {weatherMarkup} from './weather.mjs?v=20261016-restored';
 import qrcode from './vendor/qrcode.mjs';
-import {photoPair} from './experience.mjs?v=20261016-route-reveal';
-import {places,stops,normalizeView} from './tour.mjs?v=20261016-route-reveal';
+import {photoPair} from './experience.mjs?v=20261016-restored';
+import {places,stops,normalizeView} from './tour.mjs?v=20261016-restored';
 
 export const escapeHtml = value => String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export const specialTitles = {stories:'Истории прогулок',presentation:'Презентация проекта',project:'О проекте',walk:'Маршрут в историях',where:'Как найти маршрут',nordic:'Скандинавская ходьба',expert:'Слово специалиста',feedback:'Обратная связь',qr:'QR для прогулки'};

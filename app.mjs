@@ -1,19 +1,21 @@
-import {mountInterface} from './interface.mjs?v=20261016-route-reveal';
-import {communityMarkup,communityPage,mountCommunity} from './community-stories.mjs?v=20261016-route-reveal';
-import {mountWalkFinale} from './walk-finale.mjs?v=20261016-route-reveal';
-import {pulseBridge} from './route-cards.mjs?v=20261016-route-reveal';
-import {heroMarkup,mountHero,HERO_EXIT_MS} from './hero.mjs?v=20261016-route-reveal';
-import {presentationPage,mountPresentation} from './presentation.mjs?v=20261016-route-reveal';
-import {places,sides,objects,stops,messages,healthFacts,whoUrl,normalizeView,imageFor,createTour} from './tour.mjs?v=20261016-route-reveal';
-import {specialTitles,wherePage,nordicPage,expertPage,feedbackPage,qrPage,buildShareUrl,buildQrSvg,posterSvg} from './pages.mjs?v=20261016-route-reveal';
-import {photoPair,heroPulse,routeModes,mapPoint} from './experience.mjs?v=20261016-route-reveal';
-import {walkPage,mountExperience} from './journey.mjs?v=20261016-route-reveal';
-import {normalizePace,emotions,comparisonTools,setComparison,updateComparison,syncComparisonMotion,routeShareUrl,routeCardSvg,shareRoute} from './walk-tools.mjs?v=20261016-route-reveal';
-import {accessibilityDialog,readAccessibility,applyAccessibility,saveAccessibility,motionReduced} from './accessibility.mjs?v=20261016-route-reveal';
-import {mountWeather} from './weather.mjs?v=20261016-route-reveal';
-import {preparationMarkup,nearbyMarkup,projectPage,projectCardSvg} from './project-page.mjs?v=20261016-route-reveal';
-import {siteConfig} from './site-config.mjs?v=20261016-route-reveal';
+import {mountLivingScenes} from './living-scenes.mjs?v=20261016-restored';
+import {mountInterface} from './interface.mjs?v=20261016-restored';
+import {communityMarkup,communityPage,mountCommunity} from './community-stories.mjs?v=20261016-restored';
+import {mountWalkFinale} from './walk-finale.mjs?v=20261016-restored';
+import {pulseBridge} from './route-cards.mjs?v=20261016-restored';
+import {heroMarkup,mountHero,HERO_EXIT_MS} from './hero.mjs?v=20261016-restored';
+import {presentationPage,mountPresentation} from './presentation.mjs?v=20261016-restored';
+import {places,sides,objects,stops,messages,healthFacts,whoUrl,normalizeView,imageFor,createTour} from './tour.mjs?v=20261016-restored';
+import {specialTitles,wherePage,nordicPage,expertPage,feedbackPage,qrPage,buildShareUrl,buildQrSvg,posterSvg} from './pages.mjs?v=20261016-restored';
+import {photoPair,heroPulse,routeModes,mapPoint} from './experience.mjs?v=20261016-restored';
+import {walkPage,mountExperience} from './journey.mjs?v=20261016-restored';
+import {normalizePace,emotions,comparisonTools,setComparison,updateComparison,syncComparisonMotion,routeShareUrl,routeCardSvg,shareRoute} from './walk-tools.mjs?v=20261016-restored';
+import {accessibilityDialog,readAccessibility,applyAccessibility,saveAccessibility,motionReduced} from './accessibility.mjs?v=20261016-restored';
+import {mountWeather} from './weather.mjs?v=20261016-restored';
+import {preparationMarkup,nearbyMarkup,projectPage,projectCardSvg} from './project-page.mjs?v=20261016-restored';
+import {siteConfig} from './site-config.mjs?v=20261016-restored';
 
+let livingController=null;
 let accessibility=readAccessibility(globalThis.localStorage),weatherController=null,presentationController=null,heroController=null,finaleController=null,communityController=null;
 const accessHost=document.getElementById('accessibility-host');if(accessHost)accessHost.innerHTML=accessibilityDialog();
 applyAccessibility(accessibility);
@@ -121,7 +123,7 @@ function health(){return `<article class="health-page" aria-labelledby="health-t
   <div class="health-final">${go('map',`Исследовать маршрут ${svg('arrow')}`,'primary-button')}<p>Один круг · ≈ 1 050 м · обычная и скандинавская ходьба</p></div>
 </article>`;}
 
-function render({focus=false}={}){if(departureTimer){clearTimeout(departureTimer);departureTimer=null;main.classList.remove('is-departing');}experience?.destroy();weatherController?.destroy();presentationController?.destroy();heroController?.destroy();finaleController?.destroy();finaleController=null;communityController?.destroy();communityController=null;const openPhoto=document.getElementById('photo-dialog');if(openPhoto?.open)openPhoto.close();const {view,mode}=tour.snapshot();document.body.dataset.mode=mode;document.body.dataset.view=view;const extra={stories:communityPage,presentation:presentationPage,project:projectPage,where:wherePage,nordic:nordicPage,expert:expertPage,feedback:feedbackPage,qr:qrPage};main.innerHTML=view==='home'?home():view==='walk'?walkPage({mapMarkup,go,svg,lightSwitch,mode,pace:walkPace}):view==='health'?health():extra[view]?extra[view]({go,svg,target:qrTarget,feedbackAvailable:siteConfig.feedbackAvailable,mapMarkup}):workspace(view);document.title=`${view==='home'?'Зелёный пульс':view==='walk'?'Прогулка':view==='map'?'Схема маршрута':view==='health'?'Ходьба и здоровье':specialTitles[view]||places[view].title} — прогулочный маршрут в Ельске`;
+function render({focus=false}={}){if(departureTimer){clearTimeout(departureTimer);departureTimer=null;main.classList.remove('is-departing');}livingController?.destroy();experience?.destroy();weatherController?.destroy();presentationController?.destroy();heroController?.destroy();finaleController?.destroy();finaleController=null;communityController?.destroy();communityController=null;const openPhoto=document.getElementById('photo-dialog');if(openPhoto?.open)openPhoto.close();const {view,mode}=tour.snapshot();document.body.dataset.mode=mode;document.body.dataset.view=view;const extra={stories:communityPage,presentation:presentationPage,project:projectPage,where:wherePage,nordic:nordicPage,expert:expertPage,feedback:feedbackPage,qr:qrPage};main.innerHTML=view==='home'?home():view==='walk'?walkPage({mapMarkup,go,svg,lightSwitch,mode,pace:walkPace}):view==='health'?health():extra[view]?extra[view]({go,svg,target:qrTarget,feedbackAvailable:siteConfig.feedbackAvailable,mapMarkup}):workspace(view);document.title=`${view==='home'?'Зелёный пульс':view==='walk'?'Прогулка':view==='map'?'Схема маршрута':view==='health'?'Ходьба и здоровье':specialTitles[view]||places[view].title} — прогулочный маршрут в Ельске`;
   if(focus){if(!places[view]){window.scrollTo({top:0,behavior:'instant'});main.focus({preventScroll:true});}else{const detail=document.getElementById('detail-panel');detail.focus({preventScroll:true});if(matchMedia('(max-width:760px)').matches)detail.scrollIntoView({block:'start',behavior:'instant'});}}
   document.getElementById('announcement').textContent=view==='home'?'Главная страница':view==='walk'?'Прогулка. Листайте вниз для перехода между остановками.':view==='map'?'Открыта схема маршрута':view==='health'?'Ходьба и здоровье':specialTitles[view]||`Вы перешли: ${places[view].title}`;
   if(view==='qr'){const input=document.getElementById('qr-base');input.value=qrBase;updateQr();}
@@ -129,6 +131,7 @@ function render({focus=false}={}){if(departureTimer){clearTimeout(departureTimer
   if(places[view])for(const mode of ['day','night']){const im=new Image();im.src=imageFor(view,mode);}
   interfaceController.refresh({view:places[view]?'map':view,animate:focus});
   heroController=mountHero();
+  livingController=mountLivingScenes();
   syncGlobalTheme();
   syncComparisonMotion(mode);
   weatherController=mountWeather();
