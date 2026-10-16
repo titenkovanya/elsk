@@ -1,0 +1,25 @@
+{
+  "method": "Built-in Imagegen; edited clean background plates and transparent swing layers. Original scene images preserved.",
+  "assets": [
+    {
+      "input": "forest-day.webp",
+      "output": "forest-plate-day.webp",
+      "prompt": "Use case: precise-object-edit. Asset type: clean background plate for a cinemagraph. Image 1 is the EDIT TARGET. At the right is a wooden hanging bench swing on a black metal A-frame. Remove ONLY the hanging wooden seat/backrest/armrests and its thin suspension chains. KEEP the complete black A-frame: legs, top beam and support braces. Reconstruct the foliage and ground that were hidden behind the seat and chains. Preserve the gazebo, every tree trunk, path and lamp, all geometry, daylight, exact camera, framing and 1672:809 aspect ratio. The resulting plate should register pixel-for-pixel with the original. No other changes, no people, no text, no watermark."
+    },
+    {
+      "input": "forest-night.webp",
+      "output": "forest-plate-night.webp",
+      "prompt": "Use case: precise-object-edit. Asset type: clean evening background plate for a cinemagraph. Image 1 is the EDIT TARGET. At the right is a wooden hanging bench swing on a black metal A-frame. Remove ONLY the hanging wooden seat/backrest/armrests and its thin suspension chains. KEEP the complete black A-frame including legs, top beam and support braces. Reconstruct foliage/ground behind the removed seat and chains and their small shadow. Preserve gazebo and its lighting, all trunks, paths and lamps, evening light, geometry, exact camera, framing and 1672:809 aspect ratio. Must register pixel-for-pixel with original. No other changes, no people, text or watermark."
+    },
+    {
+      "input": "forest-day.webp",
+      "output": "forest-swing-day.webp",
+      "prompt": "Use case: background-extraction. Asset type: transparent animation layer. Image 1 is the EDIT TARGET. Extract ONLY the hanging wooden swing bench (seat, slatted backrest, armrests, its black bench supports) AND its thin suspension chains from the swing at the right of the photo. Remove the black stationary A-frame legs and top beam, remove all trees/ground/gazebo/other objects. Everything except the hanging bench and its two suspension chains must be genuinely transparent. Preserve the exact bench shape, lighting, camera, size and position from the original. IMPORTANT: full 1672 by 809 landscape canvas, keep the bench at its original far-right location and the chains at their original anchor coordinates; do NOT crop, enlarge, reposition or center the isolated object. No drop shadow, no text, no watermark. Preserve the natural daylight on the wood."
+    },
+    {
+      "input": "forest-night.webp",
+      "output": "forest-swing-night.webp",
+      "prompt": "Use case: background-extraction. Asset type: transparent animation layer. Image 1 is the EDIT TARGET. Extract ONLY the hanging wooden swing bench (seat, slatted backrest, armrests, its black bench supports) AND its thin suspension chains from the swing at the right of the photo. Remove the black stationary A-frame legs and top beam, remove all trees/ground/gazebo/other objects. Everything except the hanging bench and its two suspension chains must be genuinely transparent. Preserve the exact bench shape, lighting, camera, size and position from the original. IMPORTANT: full 1672 by 809 landscape canvas, keep the bench at its original far-right location and the chains at their original anchor coordinates; do NOT crop, enlarge, reposition or center the isolated object. No drop shadow, no text, no watermark. Preserve the warm evening lighting on the wood."
+    }
+  ]
+}
