@@ -3,21 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#153e31">
+  <meta name="theme-color" content="#0b1813">
   <meta name="description" content="Зелёный пульс — прогулочный маршрут в Ельске: интерактивная схема, здоровье, скандинавская ходьба, расположение, обратная связь и QR-коды.">
   <title>Зелёный пульс — интерактивный маршрут</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="experience.css?v=20261015-sequence">
-  <link rel="stylesheet" href="journey.css?v=20261015-sequence">
-  <link rel="stylesheet" href="service.css?v=20261015-sequence">
-  <link rel="stylesheet" href="hero.css?v=20261015-sequence">
-  <link rel="stylesheet" href="preparation.css?v=20261015-sequence">
-  <link rel="stylesheet" href="hero-scene.css?v=20261015-sequence">
+  <link rel="stylesheet" href="experience.css?v=20261016-route-reveal">
+  <link rel="stylesheet" href="journey.css?v=20261016-route-reveal">
+  <link rel="stylesheet" href="service.css?v=20261016-route-reveal">
+  <link rel="stylesheet" href="hero.css?v=20261016-route-reveal">
+  <link rel="stylesheet" href="preparation.css?v=20261016-route-reveal">
+  <link rel="stylesheet" href="hero-scene.css?v=20261016-route-reveal">
+  <link rel="stylesheet" href="stories.css?v=20261016-route-reveal">
+  <link rel="stylesheet" href="community.css?v=20261016-route-reveal">
+  <link rel="stylesheet" href="interface.css?v=20261016-route-reveal">
+  <link rel="stylesheet" href="identity.css?v=20261016-route-reveal">
+  <link rel="stylesheet" href="cinematic.css?v=20261016-route-reveal">
   <link rel="preload" as="image" href="assets/hero-cinema-night.webp">
 </head>
-<body>
-  <div class="pulse-rail" aria-hidden="true"></div>
+<body data-theme="dark" data-palette="forest">
+  <div class="pulse-rail" aria-hidden="true"><svg viewBox="0 0 80 32"><path d="M0 16H15L22 8L29 26L38 2L49 30L57 16H80"/></svg></div>
   <a class="skip-link" href="#main">Перейти к содержимому</a>
   <header class="header">
     <button class="brand" data-go="home" aria-label="Зелёный пульс — на главную">
@@ -28,14 +33,35 @@
       <button class="nav-link" data-go="map">Маршрут</button>
       <button class="nav-link" data-go="health">Здоровье</button>
       <button class="nav-link" data-go="where">Как добраться</button>
-      <button class="global-theme" id="global-light" data-global-light aria-pressed="false" aria-label="Включить тёмную тему"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 15A9 9 0 0 1 9 4a9 9 0 1 0 11 11Z"/></svg><span id="global-light-label">Тёмная тема</span></button>
+      <button class="global-theme" id="global-light" data-global-light aria-pressed="false" aria-label="Включить графитовую тему"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4v16M12 4a8 8 0 0 1 0 16"/></svg><span id="global-light-label">Тема: Лес</span></button>
       <button class="accessibility-open" id="accessibility-open" aria-label="Настройки доступности" aria-haspopup="dialog" aria-controls="accessibility-dialog"><span aria-hidden="true">Аа</span><span class="accessibility-label">Доступность</span></button>
-      <button class="menu-button" id="menu-open" aria-controls="nav-dialog" aria-haspopup="dialog"><span>Меню</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h16M4 16h16"/></svg></button>
+      <button class="menu-button" id="menu-open" aria-label="Открыть меню" aria-controls="nav-dialog" aria-haspopup="dialog"><span>Меню</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h16"/><path d="M4 16h16"/></svg></button>
     </nav>
   </header>
   <main id="main" tabindex="-1"></main>
-  <footer class="footer"><div class="footer-identity"><strong>Зелёный пульс</strong><span>Терренкур в Ельске · Гомельская область</span></div><div class="footer-links"><button data-go="where">Как добраться</button><button data-go="nordic">Ходьба с палками</button><button data-go="feedback">Обратная связь</button><button data-go="qr">QR-код</button><button data-go="project">О проекте</button></div><p>Визуализация концепции · 13.10.2026<br>Расположение элементов уточняется на местности</p></footer>
-  <dialog id="nav-dialog" aria-label="Навигация по сайту"><button class="dialog-close icon-button" id="menu-close" aria-label="Закрыть меню">×</button><p class="eyebrow">Зелёный пульс</p><nav class="full-menu"><button data-go="presentation">Смотреть как презентацию<span>Шесть экранов с автоматическим показом</span></button><button data-go="project">О проекте<span>Цели, схема и карточка для презентации</span></button><button data-go="walk">Начать прогулку<span>Пройдите круг шаг за шагом</span></button><button data-go="map">Интерактивный маршрут<span>Схема и виды территории</span></button><button data-go="health">Ходьба и здоровье<span>Польза регулярного движения</span></button><button data-go="nordic">Скандинавская ходьба<span>Что такое ходьба с палками</span></button><button data-go="expert">Слово специалиста<span>Рекомендация и вопросы для первого занятия</span></button><button data-go="where">Как добраться<span>Карта расположения в Ельске</span></button><button data-go="feedback">Обратная связь<span>Предложения и вопросы о проекте</span></button><button data-go="qr">QR для прогулки<span>Открыть маршрут на телефоне</span></button></nav></dialog>
+  <div class="scene-transition" id="scene-transition" aria-hidden="true" hidden><div class="scene-transition-mark"><svg viewBox="0 0 240 64"><path d="M0 32H67L81 20L95 49L114 4L135 61L151 32H240"/></svg><span>Зелёный пульс</span></div></div>
+  <dialog class="walk-reveal" id="walk-reveal" aria-labelledby="walk-reveal-title" aria-describedby="walk-reveal-caption">
+    <button type="button" class="walk-reveal-skip" id="walk-reveal-skip" aria-label="Пропустить анимацию и открыть маршрут">Пропустить <span aria-hidden="true">→</span></button>
+    <div class="walk-reveal-inner"><p class="eyebrow">Зелёный пульс · Ельск</p><h2 id="walk-reveal-title">У вашего пути<br>есть свой <em>пульс.</em></h2>
+      <svg class="walk-reveal-scheme" viewBox="0 0 1000 800" aria-hidden="true"><path class="walk-reveal-line" id="walk-reveal-path" pathLength="1000"/><path class="walk-reveal-glint" id="walk-reveal-glint" pathLength="1000"/><circle class="walk-reveal-dot" id="walk-reveal-dot" cx="960" cy="400" r="5"/><g class="walk-reveal-labels"><path class="walk-reveal-branch" d="M291 131Q314 139 334 154Q350 161 363 145"/><circle cx="363" cy="145" r="4"/><circle cx="287" cy="455" r="4"/><text x="382" y="139">Беседка и качели</text><text x="268" y="458" text-anchor="end">Спортплощадка</text><text x="681" y="736">Старт / финиш</text></g></svg>
+      <p class="walk-reveal-caption" id="walk-reveal-caption">Каждая прогулка начинается с одного импульса.</p>
+    </div>
+  </dialog>
+  <footer class="footer"><div class="footer-identity"><strong>Зелёный пульс</strong><span>Терренкур в Ельске · Гомельская область</span></div><div class="footer-links"><button data-go="stories">Истории прогулок</button><button data-go="where">Как добраться</button><button data-go="nordic">Ходьба с палками</button><button data-go="feedback">Обратная связь</button><button data-go="qr">QR-код</button><button data-go="project">О проекте</button></div><p>Визуализация концепции · 13.10.2026<br>Расположение элементов уточняется на местности</p></footer>
+  <dialog id="nav-dialog" class="park-menu" aria-labelledby="menu-title">
+    <div class="menu-sheet">
+      <header class="menu-heading"><div><p class="eyebrow">Зелёный пульс · Ельск</p><h2 id="menu-title">Выберите свой путь</h2></div><button class="dialog-close icon-button" id="menu-close" aria-label="Закрыть меню"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg></button></header>
+      <div class="menu-layout">
+        <aside class="menu-feature"><img src="assets/forest-night.webp" alt="" width="1536" height="1024" loading="lazy"><div class="menu-feature-copy"><span class="menu-place"><i aria-hidden="true"></i>Рядом с Ельской ЦРБ</span><p>Чуть ближе<br>к <em>спокойствию.</em></p><span class="menu-distance">≈ 1 050 м · один круг в вашем темпе</span><button class="primary-button" data-go="walk">Начать прогулку <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></button></div><svg class="menu-pulse" viewBox="0 0 320 70" aria-hidden="true"><path d="M0 35h80l18-12 18 30 20-47 22 58 22-29h140"/></svg></aside>
+        <div class="menu-links"><nav class="full-menu" aria-label="Основные разделы">
+          <button data-go="walk"><small class="menu-index">01</small><span class="menu-link-copy"><strong>Пройти маршрут</strong><small>Круг шаг за шагом</small></span><i class="menu-link-arrow" aria-hidden="true">↗</i></button>
+          <button data-go="map"><small class="menu-index">02</small><span class="menu-link-copy"><strong>Исследовать схему</strong><small>Выберите место на карте</small></span><i class="menu-link-arrow" aria-hidden="true">↗</i></button>
+          <button data-go="stories"><small class="menu-index">03</small><span class="menu-link-copy"><strong>Истории прогулок</strong><small>Моменты, которыми хочется поделиться</small></span><i class="menu-link-arrow" aria-hidden="true">↗</i></button>
+          <button data-go="health"><small class="menu-index">04</small><span class="menu-link-copy"><strong>Ходьба и здоровье</strong><small>Польза регулярного движения</small></span><i class="menu-link-arrow" aria-hidden="true">↗</i></button>
+        </nav><nav class="menu-secondary" aria-label="Больше о проекте"><button data-go="project">О проекте <span aria-hidden="true">↗</span></button><button data-go="where">Как добраться <span aria-hidden="true">↗</span></button><button data-go="nordic">Ходьба с палками <span aria-hidden="true">↗</span></button><button data-go="expert">Слово специалиста <span aria-hidden="true">↗</span></button><button data-go="presentation">Смотреть презентацию <span aria-hidden="true">↗</span></button><button data-go="qr">QR для прогулки <span aria-hidden="true">↗</span></button><button data-go="feedback">Обратная связь <span aria-hidden="true">↗</span></button></nav></div>
+      </div><footer class="menu-bottom"><span>Один круг. Много поводов выйти.</span><span>Гомельская область · Беларусь</span></footer>
+    </div>
+  </dialog>
   <dialog id="about-dialog" aria-labelledby="about-title">
     <button class="dialog-close icon-button" id="about-close" aria-label="Закрыть">×</button>
     <p class="eyebrow">Концепция проекта</p><h2 id="about-title">Движение рядом с домом</h2>
@@ -48,6 +74,6 @@
   </dialog>
   <div id="accessibility-host"></div>
   <div id="announcement" class="sr-only" role="status" aria-live="polite"></div>
-  <script type="module" src="app.mjs?v=20261015-sequence"></script>
+  <script type="module" src="app.mjs?v=20261016-route-reveal"></script>
 </body>
 </html>

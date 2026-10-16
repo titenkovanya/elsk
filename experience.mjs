@@ -1,11 +1,11 @@
-import {places,imageFor,sides} from './tour.mjs?v=20261015-sequence';
+import {places,imageFor,sides} from './tour.mjs?v=20261016-route-reveal';
 
 export const walkSteps = [
   {id:'start',place:'start',title:'Начнём с сердца',caption:'Старт / финиш',meters:0,progress:0,text:'Красное сердце с линией пульса — начало круга и главный ориентир. Впереди примерно 1 050 метров в вашем ритме.'},
   {id:'right',place:'right',title:'Вдоль рябиновой аллеи',caption:'Правая сторона',meters:200,progress:24,text:'От старта идём вверх. Рябины, свободная дорожка и места для короткой остановки сопровождают первые 100–300 метров.'},
   {id:'top',place:'top',title:'Ближе к лесу',caption:'Верхняя сторона',meters:450,progress:48,text:'Круг поворачивает вдоль деревьев. На отметках 400–500 метров предусмотрены скамейки и короткие сообщения о здоровье.'},
   {id:'entrance',place:'entrance',title:'Небольшое ответвление',caption:'Вход в лесную зону',meters:525,progress:50,text:'В верхнем левом углу можно ненадолго сойти с круга. Отдельная дорожка ведёт на полянку среди деревьев.'},
-  {id:'forest',place:'forest',title:'Пауза среди деревьев',caption:'Беседка и качели',meters:525,progress:50,text:'Беседка, стол и скамья-качели — место для спокойного отдыха. Затем возвращаемся по тому же подходу на основной круг.'},
+  {id:'forest',place:'forest',title:'Беседка и качели',caption:'Беседка и качели',meters:525,progress:50,text:'Беседка, стол и скамья-качели — место для спокойного отдыха. Затем возвращаемся по тому же подходу на основной круг.'},
   {id:'left',place:'left',title:'Добавим движения',caption:'Спортивная площадка',meters:700,progress:73,text:'Продолжаем по левой стороне, к отметкам 600–800 метров. Тренажёры находятся в отдельном кармане рядом с дорожкой.'},
   {id:'bottom',place:'bottom',title:'Передохнём у берёз',caption:'Площадка отдыха',meters:950,progress:92,text:'На нижней стороне запланированы навес, шахматный столик и скамейки. До конца круга остаётся совсем немного.'},
   {id:'finish',place:'start',title:'Круг завершён',caption:'Снова у сердца',meters:1050,progress:100,text:'Мы вернулись к старту. Можно пройти ещё один круг, посмотреть отдельные места или узнать больше о пользе регулярной ходьбы.'}
@@ -24,7 +24,7 @@ export function heroPulse() {
 }
 
 export function routeModes(view,go) {
-  return `<div class="route-modes" role="group" aria-label="Как смотреть маршрут">${go('map','Свободный выбор',view==='walk'?'':'selected').replace('data-go=',`aria-pressed="${view!=='walk'}" data-go=`)}${go('walk','Прогулка с прокруткой',view==='walk'?'selected':'').replace('data-go=',`aria-pressed="${view==='walk'}" data-go=`)}</div>`;
+  return `<div class="route-modes" role="group" aria-label="Как смотреть маршрут">${go('map','Свободный выбор',view==='walk'?'':'selected').replace('data-go=',`aria-pressed="${view!=='walk'}" data-go=`)}${go('walk','Истории маршрута',view==='walk'?'selected':'').replace('data-go=',`aria-pressed="${view==='walk'}" data-go=`)}</div>`;
 }
 
 export function chooseWalkIndex(tops,anchor) {

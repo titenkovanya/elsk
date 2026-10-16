@@ -1,25 +1,30 @@
-import {heroMarkup,mountHero,HERO_EXIT_MS} from './hero.mjs?v=20261015-sequence';
-import {presentationPage,mountPresentation} from './presentation.mjs?v=20261015-sequence';
-import {places,sides,objects,stops,messages,healthFacts,whoUrl,normalizeView,imageFor,createTour} from './tour.mjs?v=20261015-sequence';
-import {specialTitles,wherePage,nordicPage,expertPage,feedbackPage,qrPage,buildShareUrl,buildQrSvg,posterSvg} from './pages.mjs?v=20261015-sequence';
-import {photoPair,heroPulse,routeModes,mapPoint} from './experience.mjs?v=20261015-sequence';
-import {walkPage,mountExperience} from './journey.mjs?v=20261015-sequence';
-import {normalizePace,emotions,comparisonTools,setComparison,updateComparison,syncComparisonMotion,routeShareUrl,routeCardSvg,shareRoute} from './walk-tools.mjs?v=20261015-sequence';
-import {accessibilityDialog,readAccessibility,applyAccessibility,saveAccessibility,motionReduced} from './accessibility.mjs?v=20261015-sequence';
-import {mountWeather} from './weather.mjs?v=20261015-sequence';
-import {preparationMarkup,projectPage,projectCardSvg} from './project-page.mjs?v=20261015-sequence';
-import {siteConfig} from './site-config.mjs?v=20261015-sequence';
+import {mountInterface} from './interface.mjs?v=20261016-route-reveal';
+import {communityMarkup,communityPage,mountCommunity} from './community-stories.mjs?v=20261016-route-reveal';
+import {mountWalkFinale} from './walk-finale.mjs?v=20261016-route-reveal';
+import {pulseBridge} from './route-cards.mjs?v=20261016-route-reveal';
+import {heroMarkup,mountHero,HERO_EXIT_MS} from './hero.mjs?v=20261016-route-reveal';
+import {presentationPage,mountPresentation} from './presentation.mjs?v=20261016-route-reveal';
+import {places,sides,objects,stops,messages,healthFacts,whoUrl,normalizeView,imageFor,createTour} from './tour.mjs?v=20261016-route-reveal';
+import {specialTitles,wherePage,nordicPage,expertPage,feedbackPage,qrPage,buildShareUrl,buildQrSvg,posterSvg} from './pages.mjs?v=20261016-route-reveal';
+import {photoPair,heroPulse,routeModes,mapPoint} from './experience.mjs?v=20261016-route-reveal';
+import {walkPage,mountExperience} from './journey.mjs?v=20261016-route-reveal';
+import {normalizePace,emotions,comparisonTools,setComparison,updateComparison,syncComparisonMotion,routeShareUrl,routeCardSvg,shareRoute} from './walk-tools.mjs?v=20261016-route-reveal';
+import {accessibilityDialog,readAccessibility,applyAccessibility,saveAccessibility,motionReduced} from './accessibility.mjs?v=20261016-route-reveal';
+import {mountWeather} from './weather.mjs?v=20261016-route-reveal';
+import {preparationMarkup,nearbyMarkup,projectPage,projectCardSvg} from './project-page.mjs?v=20261016-route-reveal';
+import {siteConfig} from './site-config.mjs?v=20261016-route-reveal';
 
-let accessibility=readAccessibility(globalThis.localStorage),weatherController=null,presentationController=null,heroController=null;
+let accessibility=readAccessibility(globalThis.localStorage),weatherController=null,presentationController=null,heroController=null,finaleController=null,communityController=null;
 const accessHost=document.getElementById('accessibility-host');if(accessHost)accessHost.innerHTML=accessibilityDialog();
 applyAccessibility(accessibility);
 const main=document.getElementById('main');
 const about=document.getElementById('about-dialog');
 const menu=document.getElementById('nav-dialog');
+const interfaceController=mountInterface({menu,trigger:document.getElementById('menu-open'),main});
 const initial=location.hash?normalizeView(location.hash.slice(1)):'home';
 const tour=createTour(initial);
-let zoom=1,siteTheme='light';
-try{siteTheme=localStorage.getItem('green-pulse-theme')==='dark'?'dark':'light';}catch{}
+let zoom=1,siteTheme='forest';
+try{siteTheme=['dark','graphite'].includes(localStorage.getItem('green-pulse-theme'))?'graphite':'forest';}catch{}
 let experience=null,walkPlace='start',walkResume='start',walkPace='calm',departureTimer=null;
 let qrTarget='map',qrBase='',latestQr=null,feedbackDraft={},feedbackSending=false,feedbackId=crypto.randomUUID();
 try{tour.setMode(localStorage.getItem('green-pulse-light')||'day');}catch{}
@@ -47,13 +52,15 @@ const svg=(name)=>`<svg viewBox="0 0 24 24" aria-hidden="true">${icons[name]||ic
 const go=(view,label,classes='')=>`<button class="${classes}" data-go="${view}">${label}</button>`;
 function lightSwitch(mode){return `<div class="mode-switch" role="group" aria-label="Атмосфера маршрута">${['day','night'].map(m=>`<button data-mode-button="${m}" aria-pressed="${mode===m}" aria-label="Посмотреть маршрут ${m==='day'?'днём':'вечером'}">${svg(m==='day'?'sun':'moon')}${m==='day'?'День':'Вечер'}</button>`).join('')}</div>`;}
 
-function home(){const {mode}=tour.snapshot();return `<section class="home" aria-labelledby="home-title">
-  ${heroMarkup({go,svg})}
-  <div class="premium-stats"><div><strong>≈ 1 050 <small>м</small></strong><span>один замкнутый круг</span></div><div><strong>4 <small>зоны</small></strong><span>для движения и отдыха</span></div><div><strong>2 <small>формата</small></strong><span>обычная и скандинавская ходьба</span></div></div>
-  ${preparationMarkup()}<div class="home-editorial"><div><p class="eyebrow">Прогулка в вашем ритме</p><h2>Движение.<br>Спокойствие.<br><em>Зелень вокруг.</em></h2></div><div><p>«Зелёный пульс» объединяет свободную дорожку, спортивную площадку и места отдыха возле леса. Исследуйте концепцию: выберите участок на схеме и посмотрите его днём или вечером.</p>${go('map',`Посмотреть схему ${svg('arrow')}`,'text-button')}</div></div>
-  <div class="home-scenes">${['right','left','forest'].map(id=>go(id,`<div class="home-scene-photo">${photoPair(id,{lazy:true})}</div><span><small>${places[id].short}</small><strong>${places[id].mapTitle||places[id].label}</strong>${svg('arrow')}</span>`,'home-scene')).join('')}</div>
-  <div class="home-health-story"><p class="eyebrow">Регулярность начинается с доступности</p><h2>Простая прогулка.<br><em>Важная привычка.</em></h2><p>Проект создаёт условия для движения и профилактики рядом с повседневной жизнью. Узнайте о пользе ходьбы, разберитесь с палками и прочитайте рекомендацию специалиста.</p><div>${go('health','Ходьба и здоровье →','text-button')}${go('nordic','Что такое ходьба с палками →','text-button')}${go('expert','Слово специалиста →','text-button')}</div></div>
-  <div class="home-bottom-cta"><div><p class="eyebrow">Проект для жителей</p><h2>Ваше мнение<br><em>тоже часть маршрута.</em></h2>${go('feedback',`Поделиться предложением ${svg('arrow')}`,'primary-button')}</div><aside><p>Маршрут в телефоне</p><span>QR-код для старта,<br>таблички или буклета.</span>${go('qr','Подготовить QR-код ↗','text-button')}</aside></div>
+function home(){return `<section class="home" aria-labelledby="home-title">
+  ${heroMarkup({go,svg,stories:communityMarkup()})}
+  <div class="premium-stats"><div><strong>≈ 1 050 <small>м</small></strong><span>один круг в своём ритме</span></div><div><strong>4 <small>зоны</small></strong><span>движение, лес и отдых</span></div><div><strong>2 <small>формата</small></strong><span>обычная ходьба и с палками</span></div></div>
+  <section class="home-discover" id="home-discover" aria-labelledby="discover-title"><header class="home-section-heading"><div><p class="eyebrow">01 / Почувствуйте место</p><h2 id="discover-title">У каждого места<br><em>свой ритм.</em></h2></div><div><p>Тихая полянка, аллея и пространство для движения. Выберите то, что ближе вам.</p>${go('map',`Вся схема ${svg('arrow')}`,'text-button')}</div></header>
+  <div class="home-scenes">${[['forest','Беседка и качели','Побыть в тишине'],['right','Рябиновая аллея','Поймать свой ритм'],['left','Спортивная площадка','Добавить движения']].map(([id,label,emotion],i)=>go(id,`<div class="home-scene-photo">${photoPair(id,{lazy:true})}</div><span><small>0${i+1} / ${label}</small><strong>${emotion}</strong>${svg('arrow')}</span>`,'home-scene')).join('')}</div><p class="home-concept-note">Виды показывают предполагаемый облик парка. Это концепция проекта.</p></section>
+  <section class="home-route-guide" aria-labelledby="home-guide-title"><div><p class="eyebrow">02 / Исследуйте маршрут</p><h2 id="home-guide-title">Пройдите круг.<br><em>Прямо на экране.</em></h2><p>Листайте фотографии, выбирайте точки на схеме и сравнивайте дневной и вечерний вид.</p>${go('walk',`Начать прогулку ${svg('arrow')}`,'primary-button')}</div><ol><li><span>01</span><div><h3>Выберите свой темп</h3><p>Спокойная прогулка, быстрый круг или ходьба с палками.</p></div></li><li><span>02</span><div><h3>Загляните в каждое место</h3><p>Схема подскажет, где вы сейчас. К любой точке можно вернуться.</p></div></li><li><span>03</span><div><h3>Сохраните впечатление</h3><p>Добавьте фото в истории или создайте личную карточку прогулки.</p></div></li></ol></section>
+  <section class="home-health-story" aria-labelledby="home-health-title"><div class="home-health-photo">${photoPair('top',{lazy:true})}<span>Меньше суеты.<br>Больше времени для себя.</span></div><div class="home-health-copy"><p class="eyebrow">03 / Движение со смыслом</p><h2 id="home-health-title">Хорошая привычка.<br><em>Шаг за шагом.</em></h2><p>Узнайте, как регулярная ходьба помогает заботиться о здоровье, с чего начать и чем отличается прогулка с палками.</p><div>${go('health',`Ходьба и здоровье ${svg('arrow')}`,'text-button')}${go('nordic','Ходьба с палками ↗','text-button')}${go('expert','Слово специалиста ↗','text-button')}</div></div></section>
+  <section class="home-practical" aria-label="Подготовьтесь к прогулке"><div class="home-practical-title"><p class="eyebrow">04 / Перед выходом</p><h2>Всё нужное.<br><em>Рядом.</em></h2></div>${preparationMarkup()}${nearbyMarkup(go)}<div class="home-arrival"><div><span class="eyebrow">Главный ориентир — Ельская ЦРБ</span><p>Ельск, ул. 50 лет СССР, 30</p></div>${go('where',`Как добраться ${svg('arrow')}`,'primary-button')}</div></section>
+  <section class="home-bottom-cta"><div><p class="eyebrow">Зелёный пульс · Ельск</p><h2>Ваш следующий<br><em>шаг — к себе.</em></h2>${go('walk',`Начать прогулку ${svg('arrow')}`,'primary-button')}</div><aside><p>Возьмите маршрут с собой</p><span>Сохраните QR-код или поделитесь<br>идеей с теми, кто любит гулять.</span>${go('qr','Открыть QR-код ↗','text-button')}${go('feedback','Предложить идею ↗','text-button')}</aside></section>
 </section>`;}
 
 function mapMarkup(view){const side=places[view]?.side;return `<aside class="map-card" aria-label="Интерактивная схема маршрута">
@@ -82,7 +89,7 @@ function overview(){return `<section class="panel overview entering" id="detail-
   <h3 class="section-label">Выберите направление</h3><div class="direction-grid">${sides.map(s=>go(s,`${svg(s)}<span><strong>${places[s].title}</strong><small>${places[s].label}</small></span>`,'direction-button')).join('')}</div>
   <h3 class="section-label">Другие точки</h3><div class="object-list">${objects.map(id=>go(id,`<span class="object-number">${svg(places[id].icon)}</span><span>${places[id].short}</span>${svg('arrow')}`,'object-row')).join('')}</div>
   <div class="overview-health"><p class="eyebrow">Движение и профилактика</p><p>Узнайте, почему регулярная ходьба важна для здоровья и какую задачу решает проект.</p>${go('health',`Ходьба и здоровье ${svg('arrow')}`,'text-button')}</div>
-  <div class="overview-tip">${svg('loop')}<span>Можно идти по кругу или свободно переходить между точками. Кнопка «Назад» вернёт к предыдущему месту.</span></div>
+  <div class="overview-tip">${svg('loop')}<span>Можно идти по кругу или свободно переходить между точками. Кнопка «Назад» вернёт к предыдущему месту.</span></div>${go('where','Рядом с маршрутом ↗','text-button map-nearby-link')}
 </section>`;}
 
 function scene(view){const p=places[view],{mode}=tour.snapshot();const shape=['right','bottom'].includes(p.image)?'portrait':['top','left'].includes(p.image)?'wide':'';
@@ -114,21 +121,24 @@ function health(){return `<article class="health-page" aria-labelledby="health-t
   <div class="health-final">${go('map',`Исследовать маршрут ${svg('arrow')}`,'primary-button')}<p>Один круг · ≈ 1 050 м · обычная и скандинавская ходьба</p></div>
 </article>`;}
 
-function render({focus=false}={}){if(departureTimer){clearTimeout(departureTimer);departureTimer=null;main.classList.remove('is-departing');}experience?.destroy();weatherController?.destroy();presentationController?.destroy();heroController?.destroy();const openPhoto=document.getElementById('photo-dialog');if(openPhoto?.open)openPhoto.close();const {view,mode}=tour.snapshot();document.body.dataset.mode=mode;document.body.dataset.view=view;const extra={presentation:presentationPage,project:projectPage,where:wherePage,nordic:nordicPage,expert:expertPage,feedback:feedbackPage,qr:qrPage};main.innerHTML=view==='home'?home():view==='walk'?walkPage({mapMarkup,go,svg,lightSwitch,mode,pace:walkPace}):view==='health'?health():extra[view]?extra[view]({go,svg,target:qrTarget,feedbackAvailable:siteConfig.feedbackAvailable,mapMarkup}):workspace(view);document.title=`${view==='home'?'Зелёный пульс':view==='walk'?'Прогулка':view==='map'?'Схема маршрута':view==='health'?'Ходьба и здоровье':specialTitles[view]||places[view].title} — прогулочный маршрут в Ельске`;
+function render({focus=false}={}){if(departureTimer){clearTimeout(departureTimer);departureTimer=null;main.classList.remove('is-departing');}experience?.destroy();weatherController?.destroy();presentationController?.destroy();heroController?.destroy();finaleController?.destroy();finaleController=null;communityController?.destroy();communityController=null;const openPhoto=document.getElementById('photo-dialog');if(openPhoto?.open)openPhoto.close();const {view,mode}=tour.snapshot();document.body.dataset.mode=mode;document.body.dataset.view=view;const extra={stories:communityPage,presentation:presentationPage,project:projectPage,where:wherePage,nordic:nordicPage,expert:expertPage,feedback:feedbackPage,qr:qrPage};main.innerHTML=view==='home'?home():view==='walk'?walkPage({mapMarkup,go,svg,lightSwitch,mode,pace:walkPace}):view==='health'?health():extra[view]?extra[view]({go,svg,target:qrTarget,feedbackAvailable:siteConfig.feedbackAvailable,mapMarkup}):workspace(view);document.title=`${view==='home'?'Зелёный пульс':view==='walk'?'Прогулка':view==='map'?'Схема маршрута':view==='health'?'Ходьба и здоровье':specialTitles[view]||places[view].title} — прогулочный маршрут в Ельске`;
   if(focus){if(!places[view]){window.scrollTo({top:0,behavior:'instant'});main.focus({preventScroll:true});}else{const detail=document.getElementById('detail-panel');detail.focus({preventScroll:true});if(matchMedia('(max-width:760px)').matches)detail.scrollIntoView({block:'start',behavior:'instant'});}}
   document.getElementById('announcement').textContent=view==='home'?'Главная страница':view==='walk'?'Прогулка. Листайте вниз для перехода между остановками.':view==='map'?'Открыта схема маршрута':view==='health'?'Ходьба и здоровье':specialTitles[view]||`Вы перешли: ${places[view].title}`;
   if(view==='qr'){const input=document.getElementById('qr-base');input.value=qrBase;updateQr();}
   if(view==='feedback'){const form=document.getElementById('feedback-form');for(const [key,value] of Object.entries(feedbackDraft)){const field=form?.elements?.namedItem(key);if(field)field.value=value;}}
   if(places[view])for(const mode of ['day','night']){const im=new Image();im.src=imageFor(view,mode);}
+  interfaceController.refresh({view:places[view]?'map':view,animate:focus});
   heroController=mountHero();
   syncGlobalTheme();
   syncComparisonMotion(mode);
   weatherController=mountWeather();
   presentationController=mountPresentation({url:routeShareUrl(location.href||location.origin)});
-  experience=mountExperience({view,pace:walkPace,onOpenPlace:place=>navigate(place),onPaceChange:pace=>{walkPace=pace;try{localStorage.setItem('green-pulse-pace',pace);}catch{}},onWalkPlace:(place,step)=>{walkPlace=place;walkResume=step;tour.markVisited(place);}});
+  experience=mountExperience({view,pace:walkPace,onOpenPlace:place=>navigate(place),onPaceChange:pace=>{walkPace=pace;finaleController?.setPace(pace);try{localStorage.setItem('green-pulse-pace',pace);}catch{}},onWalkPlace:(place,step)=>{walkPlace=place;walkResume=step;tour.markVisited(place);}});
+  communityController=mountCommunity({apiBase:siteConfig.storiesApiBase||'',origin:location.origin});
+  finaleController=view==='walk'?mountWalkFinale({url:location.href||location.origin,pace:walkPace}):null;
   if(view==='walk'&&walkResume!=='start')experience.jump(walkResume,{instant:true});
 }
-function navigate(view){heroController?.cancelDeparture?.();if(departureTimer){clearTimeout(departureTimer);departureTimer=null;main.classList.remove('is-departing');}if(about.open)about.close();if(menu?.open)menu.close();const before=tour.snapshot(),contextPlace=before.view==='walk'?walkPlace:before.view;if(view==='walk'&&before.view==='home')walkResume='start';if(view==='feedback'&&!feedbackDraft.message&&places[contextPlace])feedbackDraft.section=contextPlace==='entrance'?'forest':contextPlace;const after=tour.go(view);if(before.view===after.view)return;history.pushState({greenPulse:true,cursor:after.cursor},'',`#${after.view}`);render({focus:true});}
+function navigate(view){heroController?.cancelDeparture?.();if(departureTimer){clearTimeout(departureTimer);departureTimer=null;main.classList.remove('is-departing');}if(about.open)about.close();if(menu?.open)interfaceController.closeMenu({immediate:true});const before=tour.snapshot(),contextPlace=before.view==='walk'?walkPlace:before.view;if(view==='walk'&&before.view==='home')walkResume='start';if(view==='feedback'&&!feedbackDraft.message&&places[contextPlace])feedbackDraft.section=contextPlace==='entrance'?'forest':contextPlace;const after=tour.go(view);if(before.view===after.view)return;history.pushState({greenPulse:true,cursor:after.cursor},'',`#${after.view}`);render({focus:true});}
 function setMode(mode){tour.setMode(mode);try{localStorage.setItem('green-pulse-light',tour.snapshot().mode);}catch{}
   const {view}=tour.snapshot();document.body.dataset.mode=tour.snapshot().mode;
   for(const im of document.querySelectorAll('#full-image')){im.src=imageFor(view,mode);im.alt=`${places[view]?.title||'Маршрут'} — ${mode==='night'?'вечерняя':'дневная'} визуализация проекта`;}
@@ -138,8 +148,9 @@ function setMode(mode){tour.setMode(mode);try{localStorage.setItem('green-pulse-
   document.getElementById('announcement').textContent=`Включён ${mode==='night'?'вечерний':'дневной'} вид`;
   syncComparisonMotion(tour.snapshot().mode);
 }
-function syncGlobalTheme(){const dark=siteTheme==='dark';document.body.dataset.theme=siteTheme;const button=document.getElementById('global-light');if(button){button.setAttribute('aria-pressed',String(dark));button.setAttribute('aria-label',dark?'Выключить тёмную тему':'Включить тёмную тему');button.setAttribute('title',dark?'Выключить тёмную тему':'Включить тёмную тему');}const label=document.getElementById('global-light-label');if(label)label.textContent='Тёмная тема';document.querySelector('meta[name="theme-color"]')?.setAttribute('content',dark?'#10271f':'#183d31');}
-function toggleTheme(){siteTheme=siteTheme==='dark'?'light':'dark';try{localStorage.setItem('green-pulse-theme',siteTheme);}catch{}syncGlobalTheme();document.getElementById('announcement').textContent=siteTheme==='dark'?'Тёмная тема включена':'Тёмная тема выключена';}
+function syncGlobalTheme(){const graphite=siteTheme==='graphite';document.body.dataset.theme='dark';document.body.dataset.palette=siteTheme;const button=document.getElementById('global-light');if(button){button.setAttribute('aria-pressed',String(graphite));button.setAttribute('aria-label',graphite?'Включить лесную тему':'Включить графитовую тему');button.setAttribute('title',graphite?'Переключить на лесную тему':'Переключить на графитовую тему');}const label=document.getElementById('global-light-label');if(label)label.textContent=graphite?'Тема: Графит':'Тема: Лес';document.querySelector('meta[name="theme-color"]')?.setAttribute('content',graphite?'#11171b':'#0b1813');}
+function toggleTheme(){siteTheme=siteTheme==='forest'?'graphite':'forest';try{localStorage.setItem('green-pulse-theme',siteTheme);}catch{}syncGlobalTheme();document.getElementById('announcement').textContent=siteTheme==='graphite'?'Графитовая тема включена':'Лесная тема включена';}
+
 async function handleRouteShare(){const button=document.getElementById('route-share'),status=document.getElementById('route-share-status'),input=document.getElementById('route-share-link'),url=routeShareUrl(location.href||location.origin);button.disabled=true;try{const result=await shareRoute(url);input.hidden=result!=='manual';if(result==='shared')status.textContent='Готово — маршрут передан в меню «Поделиться».';else if(result==='copied')status.textContent='Ссылка на маршрут скопирована.';else if(result==='cancelled')status.textContent='Вы можете поделиться маршрутом позже.';else{input.value=url;input.focus();input.select();status.textContent='Скопируйте ссылку из поля ниже.';}}finally{button.disabled=false;}}
 function downloadRouteCard(){const blob=new Blob([routeCardSvg(routeShareUrl(location.href||location.origin))],{type:'image/svg+xml;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='zeleny-puls-elsk.svg';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 function updateAccessibility(value){accessibility=applyAccessibility(value);saveAccessibility(accessibility,globalThis.localStorage);syncComparisonMotion(tour.snapshot().mode);if(motionReduced()&&departureTimer){clearTimeout(departureTimer);departureTimer=null;main.classList.remove('is-departing');}document.dispatchEvent(new Event('green-pulse-accessibility'));document.getElementById('announcement').textContent='Настройки отображения сохранены.';}
@@ -165,7 +176,8 @@ document.addEventListener('click',event=>{const b=event.target.closest('button')
   else if(b.id==='route-card-download')downloadRouteCard();
   else if(b.dataset.walkTarget)experience?.jump(b.dataset.walkTarget);
   else if(b.hasAttribute('data-walk-next'))experience?.jump('next');
-  else if(b.dataset.go){if(b.dataset.go==='qr')qrTarget=b.dataset.qrTarget||tour.snapshot().view;if(b.dataset.go==='walk'&&tour.snapshot().view==='home'&&!motionReduced()){if(departureTimer)return;main.classList.add('is-departing');heroController?.depart?.();departureTimer=setTimeout(()=>navigate('walk'),HERO_EXIT_MS);return;}navigate(b.dataset.go);}
+  else if(b.hasAttribute('data-walk-finale'))document.getElementById('walk-memory')?.scrollIntoView({block:'start',behavior:motionReduced()?'instant':'smooth'});
+  else if(b.dataset.go){if(b.dataset.go==='qr')qrTarget=b.dataset.qrTarget||tour.snapshot().view;if(b.dataset.go==='walk'&&tour.snapshot().view==='home'&&!menu?.open&&!motionReduced()){if(departureTimer)return;main.classList.add('is-departing');heroController?.depart?.();departureTimer=setTimeout(()=>navigate('walk'),HERO_EXIT_MS);return;}navigate(b.dataset.go);}
   else if(b.hasAttribute('data-back')){if(tour.snapshot().canBack)history.back();else navigate('map');}
   else if(b.dataset.modeButton)setMode(b.dataset.modeButton);
   else if(b.dataset.zoom){zoom=b.dataset.zoom==='reset'?1:Math.max(1,Math.min(2,zoom+(b.dataset.zoom==='in'?.25:-.25)));const canvas=document.querySelector('.map-canvas');if(canvas)canvas.style.width=`${zoom*100}%`;document.querySelector('[data-zoom="out"]').disabled=zoom<=1;document.querySelector('[data-zoom="in"]').disabled=zoom>=2;}
@@ -173,18 +185,17 @@ document.addEventListener('click',event=>{const b=event.target.closest('button')
   else if(b.id==='about-close')about.close();
   else if(b.id==='photo-open')fullPhoto();
   else if(b.id==='photo-close')document.getElementById('photo-dialog').close();
-  else if(b.id==='menu-open')menu.showModal();
-  else if(b.id==='menu-close')menu.close();
+  else if(b.id==='menu-open')interfaceController.openMenu();
+  else if(b.id==='menu-close')interfaceController.closeMenu();
   else if(b.id==='qr-download'&&latestQr)downloadPoster();
   else if(b.id==='qr-print'&&latestQr)window.print();
 });
-function updateQr(){const select=document.getElementById('qr-target'),base=document.getElementById('qr-base');if(!select||!base)return;qrTarget=select.value||'map';qrBase=base.value||'';const error=document.getElementById('qr-error');try{const url=buildShareUrl(qrBase,qrTarget,location.href||location.origin);const svgCode=buildQrSvg(url);const title=qrTarget==='map'?'Начать маршрут':qrTarget==='health'?'Ходьба и здоровье':places[qrTarget]?.mapTitle||places[qrTarget]?.short||specialTitles[qrTarget];document.getElementById('qr-image').innerHTML=svgCode;document.getElementById('qr-check').href=url;document.getElementById('qr-poster-title').textContent=title;error.textContent='';latestQr={url,svg:svgCode,title,target:qrTarget};document.getElementById('qr-download').disabled=false;document.getElementById('qr-print').disabled=false;}catch(e){error.textContent=e.message;latestQr=null;document.getElementById('qr-image').innerHTML='';document.getElementById('qr-check').removeAttribute('href');document.getElementById('qr-download').disabled=true;document.getElementById('qr-print').disabled=true;}}
+function updateQr(){const select=document.getElementById('qr-target'),base=document.getElementById('qr-base');if(!select||!base)return;qrTarget=select.value||'map';qrBase=base.value||'';const error=document.getElementById('qr-error');try{const url=buildShareUrl(qrBase,qrTarget,location.href||location.origin);const svgCode=buildQrSvg(url);const title=qrTarget==='map'?'Начать маршрут':qrTarget==='health'?'Ходьба и здоровье':places[qrTarget]?.mapTitle||places[qrTarget]?.short||specialTitles[qrTarget];document.getElementById('qr-image').innerHTML=svgCode;const art=document.getElementById('qr-poster-art');if(art)art.innerHTML=posterSvg(svgCode,title);document.getElementById('qr-check').href=url;document.getElementById('qr-poster-title').textContent=title;error.textContent='';latestQr={url,svg:svgCode,title,target:qrTarget};document.getElementById('qr-download').disabled=false;document.getElementById('qr-print').disabled=false;}catch(e){error.textContent=e.message;latestQr=null;document.getElementById('qr-image').innerHTML='';const art=document.getElementById('qr-poster-art');if(art)art.innerHTML='';document.getElementById('qr-check').removeAttribute('href');document.getElementById('qr-download').disabled=true;document.getElementById('qr-print').disabled=true;}}
 function downloadPoster(){const blob=new Blob([posterSvg(latestQr.svg,latestQr.title)],{type:'image/svg+xml;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`zeleny-puls-${latestQr.target}.svg`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 document.addEventListener('input',event=>{if(event.target.dataset?.compareRange)updateComparison(event.target);if(['qr-base','qr-target'].includes(event.target.id))updateQr();if(event.target.form?.id==='feedback-form'){feedbackDraft=Object.fromEntries(new FormData(event.target.form));}});
 document.addEventListener('change',event=>{if(event.target.dataset?.accessibility){accessibility[event.target.dataset.accessibility]=event.target.checked;updateAccessibility(accessibility);}if(['qr-base','qr-target'].includes(event.target.id))updateQr();if(event.target.form?.id==='feedback-form'){feedbackDraft=Object.fromEntries(new FormData(event.target.form));}});
 document.addEventListener('submit',async event=>{if(event.target.id!=='feedback-form')return;event.preventDefault();if(feedbackSending)return;const form=event.target;if(form.reportValidity&&!form.reportValidity())return;feedbackDraft=Object.fromEntries(new FormData(form));const button=document.getElementById('feedback-submit'),status=document.getElementById('feedback-status');feedbackSending=true;button.disabled=true;status.dataset.state='pending';status.textContent='Сохраняем сообщение…';try{const response=await fetch('/api/feedback',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'same-origin',body:JSON.stringify({...feedbackDraft,id:feedbackId})});const data=await response.json();if(!response.ok||data.ok!==true)throw new Error(data.error||'Не удалось сохранить сообщение. Попробуйте ещё раз.');feedbackDraft={};feedbackId=crypto.randomUUID();form.reset();status.dataset.state='success';status.textContent='Сообщение сохранено. Спасибо, что помогаете проекту!';}catch(e){status.dataset.state='error';status.textContent=e.message||'Сейчас сообщение не удалось отправить. Ваш текст остаётся в форме.';}finally{feedbackSending=false;button.disabled=false;}});
 about.addEventListener('click',event=>{if(event.target===about)about.close();});
-menu?.addEventListener('click',event=>{if(event.target===menu)menu.close();});
 window.addEventListener('popstate',event=>{const view=location.hash?normalizeView(location.hash.slice(1)):'home';tour.restore(event.state?.greenPulse?event.state.cursor:undefined,view);render({focus:true});});
 window.addEventListener('hashchange',()=>{const view=location.hash?normalizeView(location.hash.slice(1)):'home';if(view!==tour.snapshot().view){tour.restore(undefined,view);render({focus:true});}});
 const systemMotion=matchMedia('(prefers-reduced-motion: reduce)');systemMotion.addEventListener?.('change',()=>{syncComparisonMotion(tour.snapshot().mode);document.dispatchEvent(new Event('green-pulse-accessibility'));});
